@@ -157,7 +157,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center justify-center">
                 <MapPin className="w-6 h-6 mr-2 text-purple-400" />
-                Top 3 Recommended Cities
+                Top Astrocartography Influences
               </h3>
               
               {/* Three bullet points - centered */}
