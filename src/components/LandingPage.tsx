@@ -28,7 +28,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         {/* Description */}
         <div className="mb-12 max-w-2xl mx-auto">
           <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-6">
-            Unlock personalized astrological insights that guide you toward the perfect places for love, career, and wealth based on your astrological birth chart
+            Unlock the hidden energies of the Earth through astrocartography—a form of locational astrology that maps how the planets at your birth influence different places around the world. Discover where love flourishes, purpose unfolds, and prosperity flows.
           </p>
         </div>
 
