@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft, Briefcase, Calendar, Building } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { UserData, CityRecommendation } from '../types';
 
@@ -22,7 +22,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
   const getCityRecommendations = (): CityWithNextStep[] => {
     const baseCities = [
       { name: 'Mexico City', country: 'Mexico', distance: '1,200 miles', population: '978,908' },
-      { name: 'Bueno Aires', country: 'Argentina', distance: '5,500 miles', population: '1.6M' },
+      { name: 'Buenos Aires', country: 'Argentina', distance: '5,500 miles', population: '1.6M' },
       { name: 'Lagos', country: 'Nigeria', distance: '2,400 miles', population: '675,218' }
     ];
 
@@ -128,10 +128,27 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
           {/* City Recommendations */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+            <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
               <MapPin className="w-6 h-6 mr-2 text-purple-400" />
               Top 3 Recommended Cities
             </h3>
+            
+            {/* Three bullet points */}
+            <div className="mb-6 space-y-2">
+              <div className="flex items-start">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <p className="text-slate-700">Cities with the strongest astrological alignment for your {userData.influence} goals</p>
+              </div>
+              <div className="flex items-start">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <p className="text-slate-700">Locations where planetary influences support your personal growth and success</p>
+              </div>
+              <div className="flex items-start">
+                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                <p className="text-slate-700">Places with optimal cosmic timing for major life decisions and opportunities</p>
+              </div>
+            </div>
+
             <div className="grid md:grid-cols-3 gap-6">
               {cities.map((city, index) => (
                 <div key={city.name} className="bg-white rounded-2xl p-6 hover:shadow-lg transition-all duration-300 border border-slate-200">
@@ -158,13 +175,19 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                     ))}
                   </div>
 
-                  {/* Next Step */}
-                  <div className="border-t border-slate-200 pt-4">
-                    <h5 className="text-slate-800 font-semibold mb-2">{city.nextStep.title}</h5>
-                    <p className="text-slate-600 text-sm mb-3">{city.nextStep.description}</p>
-                    <button className={`w-full px-4 py-2 bg-gradient-to-r ${getInfluenceColor()} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center`}>
-                      {city.nextStep.action}
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                  {/* Action Links */}
+                  <div className="border-t border-slate-200 pt-4 space-y-3">
+                    <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-300 to-indigo-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                      <Briefcase className="w-4 h-4 mr-2" />
+                      Job Opportunities
+                    </button>
+                    <button className="w-full px-4 py-2 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      Networking Events
+                    </button>
+                    <button className="w-full px-4 py-2 bg-gradient-to-r from-purple-300 to-violet-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                      <Building className="w-4 h-4 mr-2" />
+                      Conferences
                     </button>
                   </div>
                 </div>
