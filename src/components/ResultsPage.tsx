@@ -105,7 +105,33 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
     return avatars[userData.avatar as keyof typeof avatars] || avatars.apollo;
   };
 
+  const getMainBulletPoints = () => {
+    switch (userData.influence) {
+      case 'wealth':
+        return [
+          'Jupiter Midheaven (MC) Line – Brings big career opportunities, luck, and public success.',
+          'Venus Midheaven (MC) Line – Attracts money through charm, beauty, and social visibility.',
+          'Venus Ascendant (AC) Line – Makes you magnetic to people and wealth-building connections.'
+        ];
+      case 'love':
+        return [
+          'Strong Venus planetary line alignment',
+          'High concentration of compatible energy',
+          'Favorable lunar aspects for relationships'
+        ];
+      case 'career':
+        return [
+          'Powerful Mercury-Jupiter conjunction',
+          'Enhanced professional networking energy',
+          'Optimal timing for career advancement'
+        ];
+      default:
+        return [];
+    }
+  };
+
   const avatarDetails = getAvatarDetails();
+  const mainBulletPoints = getMainBulletPoints();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
@@ -128,24 +154,20 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
           {/* City Recommendations */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center">
-              <MapPin className="w-6 h-6 mr-2 text-purple-400" />
-              Top 3 Recommended Cities
-            </h3>
-            
-            {/* Three bullet points */}
-            <div className="mb-6 space-y-2">
-              <div className="flex items-start">
-                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Jupiter line activation for abundance</p>
-              </div>
-              <div className="flex items-start">
-                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Solar return chart shows financial growth</p>
-              </div>
-              <div className="flex items-start">
-                <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Favorable Venus-Pluto aspects for investments</p>
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center justify-center">
+                <MapPin className="w-6 h-6 mr-2 text-purple-400" />
+                Top 3 Recommended Cities
+              </h3>
+              
+              {/* Three bullet points - centered */}
+              <div className="max-w-2xl mx-auto space-y-2">
+                {mainBulletPoints.map((point, index) => (
+                  <div key={index} className="flex items-start justify-center">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <p className="text-slate-700 text-left">{point}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
