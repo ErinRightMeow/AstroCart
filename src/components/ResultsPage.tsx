@@ -94,13 +94,30 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
     }
   };
 
+  const getAvatarDetails = () => {
+    const avatars = {
+      apollo: { color: 'bg-gradient-to-br from-yellow-300 to-orange-300', symbol: '☀️' },
+      athena: { color: 'bg-gradient-to-br from-blue-300 to-indigo-300', symbol: '🦉' },
+      venus: { color: 'bg-gradient-to-br from-pink-300 to-rose-300', symbol: '💕' },
+      mercury: { color: 'bg-gradient-to-br from-purple-300 to-violet-300', symbol: '⚡' },
+      diana: { color: 'bg-gradient-to-br from-green-300 to-emerald-300', symbol: '🏹' }
+    };
+    return avatars[userData.avatar as keyof typeof avatars] || avatars.apollo;
+  };
+
+  const avatarDetails = getAvatarDetails();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
       <div className="max-w-6xl mx-auto">
         <ProgressIndicator currentStep={4} totalSteps={4} />
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100 mb-6">
+          {/* Avatar and Header */}
           <div className="text-center mb-8">
+            <div className={`w-24 h-24 rounded-full ${avatarDetails.color} flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg`}>
+              {avatarDetails.symbol}
+            </div>
             <h2 className="text-4xl font-bold text-slate-800 mb-4">
               Your Cosmic Insights
             </h2>
