@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Users, Star, Share2, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { UserData, CityRecommendation } from '../types';
 
@@ -157,6 +157,13 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={onBack}
+              className="flex items-center justify-center px-6 py-3 bg-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-300 transition-all duration-200"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back
+            </button>
             <button
               onClick={handleShare}
               className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-200 transform hover:scale-105 transition-all duration-200"
