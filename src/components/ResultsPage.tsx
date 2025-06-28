@@ -234,24 +234,26 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                     <p className="text-purple-600 font-medium text-sm mb-2">{city.lines}</p>
                     <p className="text-slate-700 text-sm">{city.meaning}</p>
                   </div>
-
-                  {/* Action Links */}
-                  <div className="space-y-3">
-                    <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-300 to-indigo-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
-                      <Briefcase className="w-4 h-4 mr-2" />
-                      Job Opportunities
-                    </button>
-                    <button className="w-full px-4 py-2 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Networking Events
-                    </button>
-                    <button className="w-full px-4 py-2 bg-gradient-to-r from-purple-300 to-violet-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
-                      <Building className="w-4 h-4 mr-2" />
-                      Conferences
-                    </button>
-                  </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Horizontal Action Links */}
+          <div className="mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button className="px-6 py-3 bg-gradient-to-r from-blue-300 to-indigo-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                <Briefcase className="w-5 h-5 mr-2" />
+                Job Opportunities
+              </button>
+              <button className="px-6 py-3 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                <Calendar className="w-5 h-5 mr-2" />
+                Networking Events
+              </button>
+              <button className="px-6 py-3 bg-gradient-to-r from-purple-300 to-violet-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+                <Building className="w-5 h-5 mr-2" />
+                Conferences
+              </button>
             </div>
           </div>
 
