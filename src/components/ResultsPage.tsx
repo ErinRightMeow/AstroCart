@@ -72,6 +72,39 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
           nextStep: nextStepsByInfluence.love
         }
       ];
+    } else if (userData.influence === 'career') {
+      return [
+        {
+          name: 'San Francisco',
+          country: 'USA',
+          distance: '~4,075 km',
+          population: '',
+          lines: 'Sun Midheaven',
+          meaning: 'Strong visibility, leadership potential, and recognition for your talents.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        },
+        {
+          name: 'Sydney',
+          country: 'Australia',
+          distance: '~15,767 km',
+          population: '',
+          lines: 'Mars Midheaven',
+          meaning: 'Energizing for ambition, courage, and direct action in leadership.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        },
+        {
+          name: 'Bangkok',
+          country: 'Thailand',
+          distance: '~14,390 km',
+          population: '',
+          lines: 'Saturn Ascendant',
+          meaning: 'Ideal for building long-term authority, structure, and mastering your craft.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        }
+      ];
     } else if (userData.influence === 'wealth') {
       return [
         {
@@ -106,39 +139,8 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
         }
       ];
     } else {
-      // Default for career or other influences
-      return [
-        {
-          name: 'Mexico City',
-          country: 'Mexico',
-          distance: '1,200 miles',
-          population: '978,908',
-          lines: 'Career Line',
-          meaning: 'Professional growth and opportunities.',
-          reasons: [],
-          nextStep: nextStepsByInfluence.career
-        },
-        {
-          name: 'Buenos Aires',
-          country: 'Argentina',
-          distance: '5,500 miles',
-          population: '1.6M',
-          lines: 'Career Line',
-          meaning: 'Professional growth and opportunities.',
-          reasons: [],
-          nextStep: nextStepsByInfluence.career
-        },
-        {
-          name: 'Lagos',
-          country: 'Nigeria',
-          distance: '2,400 miles',
-          population: '675,218',
-          lines: 'Career Line',
-          meaning: 'Professional growth and opportunities.',
-          reasons: [],
-          nextStep: nextStepsByInfluence.career
-        }
-      ];
+      // Fallback - should not reach here with current flow
+      return [];
     }
   };
 
