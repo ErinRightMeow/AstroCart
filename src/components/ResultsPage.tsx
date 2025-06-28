@@ -21,9 +21,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
   // Mock data for demonstration - in production, this would come from Swiss Ephemeris calculations
   const getCityRecommendations = (): CityWithNextStep[] => {
     const baseCities = [
-      { name: 'Austin', country: 'USA', distance: '1,200 miles', population: '978,908' },
-      { name: 'Barcelona', country: 'Spain', distance: '5,500 miles', population: '1.6M' },
-      { name: 'Vancouver', country: 'Canada', distance: '2,400 miles', population: '675,218' }
+      { name: 'Mexico City', country: 'Mexico', distance: '1,200 miles', population: '978,908' },
+      { name: 'Bueno Aires', country: 'Argentina', distance: '5,500 miles', population: '1.6M' },
+      { name: 'Lagos', country: 'Nigeria', distance: '2,400 miles', population: '675,218' }
     ];
 
     const reasonsByInfluence = {
