@@ -9,12 +9,12 @@ export const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentSte
   return (
     <div className="w-full max-w-md mx-auto mb-8">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-indigo-200">Step {currentStep} of {totalSteps}</span>
-        <span className="text-sm font-medium text-indigo-200">{Math.round((currentStep / totalSteps) * 100)}%</span>
+        <span className="text-sm font-medium text-slate-600">Step {currentStep} of {totalSteps}</span>
+        <span className="text-sm font-medium text-slate-600">{Math.round((currentStep / totalSteps) * 100)}%</span>
       </div>
-      <div className="w-full bg-indigo-900/30 rounded-full h-2">
+      <div className="w-full bg-slate-200 rounded-full h-2">
         <div 
-          className="bg-gradient-to-r from-indigo-400 to-purple-400 h-2 rounded-full transition-all duration-500 ease-out"
+          className="bg-gradient-to-r from-purple-400 to-blue-400 h-2 rounded-full transition-all duration-500 ease-out"
           style={{ width: `${(currentStep / totalSteps) * 100}%` }}
         ></div>
       </div>

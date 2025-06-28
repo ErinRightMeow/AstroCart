@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Users, Star, ExternalLink, Share2, ArrowRight } from 'lucide-react';
+import { MapPin, Users, Star, Share2, ArrowRight } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { UserData, CityRecommendation } from '../types';
 
@@ -87,46 +87,46 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
   const getInfluenceColor = () => {
     switch (userData.influence) {
-      case 'love': return 'from-pink-500 to-rose-500';
-      case 'career': return 'from-blue-500 to-indigo-500';
-      case 'wealth': return 'from-yellow-500 to-orange-500';
-      default: return 'from-indigo-500 to-purple-500';
+      case 'love': return 'from-pink-300 to-rose-300';
+      case 'career': return 'from-blue-300 to-indigo-300';
+      case 'wealth': return 'from-yellow-300 to-orange-300';
+      default: return 'from-purple-300 to-blue-300';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
       <div className="max-w-6xl mx-auto">
         <ProgressIndicator currentStep={4} totalSteps={4} />
         
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl mb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100 mb-6">
           <div className="text-center mb-8">
-            <h2 className="text-4xl font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-slate-800 mb-4">
               Your Cosmic Insights
             </h2>
-            <p className="text-indigo-200 text-lg">
+            <p className="text-slate-600 text-lg">
               Based on your birth chart, here are the perfect cities for your {userData.influence} journey
             </p>
           </div>
 
           {/* City Recommendations */}
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <MapPin className="w-6 h-6 mr-2 text-yellow-400" />
+            <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+              <MapPin className="w-6 h-6 mr-2 text-purple-400" />
               Top 3 Recommended Cities
             </h3>
             <div className="grid md:grid-cols-3 gap-6">
               {cities.map((city, index) => (
-                <div key={city.name} className="bg-white/20 rounded-xl p-6 hover:bg-white/30 transition-all duration-300">
+                <div key={city.name} className="bg-white rounded-2xl p-6 hover:shadow-lg transition-all duration-300 border border-slate-200">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-bold text-white">{city.name}</h4>
-                    <div className="flex items-center text-yellow-400">
+                    <h4 className="text-xl font-bold text-slate-800">{city.name}</h4>
+                    <div className="flex items-center text-purple-400">
                       <Star className="w-5 h-5 mr-1 fill-current" />
                       <span className="text-sm font-medium">#{index + 1}</span>
                     </div>
                   </div>
-                  <p className="text-indigo-200 mb-2">{city.country}</p>
-                  <div className="flex items-center text-indigo-300 text-sm mb-4">
+                  <p className="text-slate-600 mb-2">{city.country}</p>
+                  <div className="flex items-center text-slate-500 text-sm mb-4">
                     <Users className="w-4 h-4 mr-1" />
                     <span>{city.population} • {city.distance} away</span>
                   </div>
@@ -135,16 +135,16 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                   <div className="space-y-2 mb-6">
                     {city.reasons.map((reason, idx) => (
                       <div key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <p className="text-white text-sm">{reason}</p>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                        <p className="text-slate-700 text-sm">{reason}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Next Step */}
-                  <div className="border-t border-white/20 pt-4">
-                    <h5 className="text-white font-semibold mb-2">{city.nextStep.title}</h5>
-                    <p className="text-indigo-200 text-sm mb-3">{city.nextStep.description}</p>
+                  <div className="border-t border-slate-200 pt-4">
+                    <h5 className="text-slate-800 font-semibold mb-2">{city.nextStep.title}</h5>
+                    <p className="text-slate-600 text-sm mb-3">{city.nextStep.description}</p>
                     <button className={`w-full px-4 py-2 bg-gradient-to-r ${getInfluenceColor()} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center`}>
                       {city.nextStep.action}
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -159,14 +159,14 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
               onClick={handleShare}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105 transition-all duration-200"
+              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-200 transform hover:scale-105 transition-all duration-200"
             >
               <Share2 className="w-5 h-5 mr-2" />
               Share Results
             </button>
             <button
               onClick={onStartOver}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-200"
+              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-400 to-blue-400 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-purple-200 transform hover:scale-105 transition-all duration-200"
             >
               Start New Journey
             </button>
