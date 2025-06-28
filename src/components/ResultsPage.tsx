@@ -9,7 +9,9 @@ interface ResultsPageProps {
   onStartOver: () => void;
 }
 
-interface CityWithNextStep extends CityRecommendation {
+interface CityWithAstroData extends CityRecommendation {
+  lines: string;
+  meaning: string;
   nextStep: {
     title: string;
     description: string;
@@ -18,14 +20,7 @@ interface CityWithNextStep extends CityRecommendation {
 }
 
 export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onStartOver }) => {
-  // Mock data for demonstration - in production, this would come from Swiss Ephemeris calculations
-  const getCityRecommendations = (): CityWithNextStep[] => {
-    const baseCities = [
-      { name: 'Mexico City', country: 'Mexico', distance: '1,200 miles', population: '978,908' },
-      { name: 'Buenos Aires', country: 'Argentina', distance: '5,500 miles', population: '1.6M' },
-      { name: 'Lagos', country: 'Nigeria', distance: '2,400 miles', population: '675,218' }
-    ];
-
+  const getCityRecommendations = (): CityWithAstroData[] => {
     const nextStepsByInfluence = {
       love: {
         title: 'Find Local Dating Events',
@@ -44,11 +39,107 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
       }
     };
 
-    return baseCities.map(city => ({
-      ...city,
-      reasons: [],
-      nextStep: nextStepsByInfluence[userData.influence!]
-    }));
+    if (userData.influence === 'love') {
+      return [
+        {
+          name: 'Lisbon',
+          country: 'Portugal',
+          distance: '~5,755 km',
+          population: '',
+          lines: 'Venus Descendant, Moon Descendant',
+          meaning: 'Strong potential for romantic relationships, emotional connection, and being seen as desirable by others.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.love
+        },
+        {
+          name: 'Istanbul',
+          country: 'Turkey',
+          distance: '~8,499 km',
+          population: '',
+          lines: 'Moon Descendant',
+          meaning: 'Deep emotional bonds, nurturing partnerships, and intuitive relational energy.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.love
+        },
+        {
+          name: 'Rome',
+          country: 'Italy',
+          distance: '~7,289 km',
+          population: '',
+          lines: 'Moon Descendant',
+          meaning: 'Ideal for heartfelt relationships, emotional resonance, and feeling cared for in connections.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.love
+        }
+      ];
+    } else if (userData.influence === 'wealth') {
+      return [
+        {
+          name: 'San Francisco',
+          country: 'USA',
+          distance: '~4,075 km',
+          population: '',
+          lines: 'Venus Midheaven',
+          meaning: 'Prosperity through social capital, charm, and artistic or people-driven success.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.wealth
+        },
+        {
+          name: 'Seattle',
+          country: 'USA',
+          distance: '~3,943 km',
+          population: '',
+          lines: 'Venus Midheaven',
+          meaning: 'Similar to SF — potential for beauty-meets-business energy, luxury, or values-aligned wealth.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.wealth
+        },
+        {
+          name: 'Buenos Aires',
+          country: 'Argentina',
+          distance: '~8,118 km',
+          population: '',
+          lines: 'Jupiter Midheaven',
+          meaning: 'Expansion and success through teaching, travel, international markets, or abundance-minded ventures.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.wealth
+        }
+      ];
+    } else {
+      // Default for career or other influences
+      return [
+        {
+          name: 'Mexico City',
+          country: 'Mexico',
+          distance: '1,200 miles',
+          population: '978,908',
+          lines: 'Career Line',
+          meaning: 'Professional growth and opportunities.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        },
+        {
+          name: 'Buenos Aires',
+          country: 'Argentina',
+          distance: '5,500 miles',
+          population: '1.6M',
+          lines: 'Career Line',
+          meaning: 'Professional growth and opportunities.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        },
+        {
+          name: 'Lagos',
+          country: 'Nigeria',
+          distance: '2,400 miles',
+          population: '675,218',
+          lines: 'Career Line',
+          meaning: 'Professional growth and opportunities.',
+          reasons: [],
+          nextStep: nextStepsByInfluence.career
+        }
+      ];
+    }
   };
 
   const cities = getCityRecommendations();
@@ -87,33 +178,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
     return avatars[userData.avatar as keyof typeof avatars] || avatars.apollo;
   };
 
-  const getMainBulletPoints = () => {
-    switch (userData.influence) {
-      case 'love':
-        return [
-          'Venus Ascendant (AC) Line – Boosts attractiveness, romance, and personal magnetism in relationships.',
-          'Venus Descendant (DC) Line – Draws loving, romantic, and loyal partners into your life.',
-          'Moon Descendant (DC) Line – Deepens emotional bonds and supports nurturing, heartfelt relationships.'
-        ];
-      case 'career':
-        return [
-          'Sun Midheaven (MC) Line – Puts you in the spotlight and supports leadership, confidence, and career visibility.',
-          'Saturn Midheaven (MC) Line – Favors discipline, responsibility, and long-term career mastery—slow climb, lasting rewards.',
-          'Mars Midheaven (MC) Line – Sparks ambition, drive, and bold career moves, especially in competitive or entrepreneurial fields.'
-        ];
-      case 'wealth':
-        return [
-          'Jupiter Ascendant (AC) Line – Attracts luck, expansion, and financial opportunities through personal initiative and charisma.',
-          'Venus Ascendant (AC) Line – Boosts your ability to attract wealth through relationships, charm, and favorable circumstances.',
-          'Pluto Midheaven (MC) Line – Brings power, transformation, and potential for major financial gains (especially in finance, tech, or psychology), but requires resilience.'
-        ];
-      default:
-        return [];
-    }
-  };
-
   const avatarDetails = getAvatarDetails();
-  const mainBulletPoints = getMainBulletPoints();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
@@ -138,22 +203,10 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
           {/* City Recommendations */}
           <div className="mb-8">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center justify-center">
-                <MapPin className="w-6 h-6 mr-2 text-purple-400" />
-                Top Astrocartography Influences
-              </h3>
-              
-              {/* Three bullet points - centered */}
-              <div className="max-w-4xl mx-auto space-y-2">
-                {mainBulletPoints.map((point, index) => (
-                  <div key={index} className="flex items-start justify-center">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    <p className="text-slate-700 text-left">{point}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center justify-center">
+              <MapPin className="w-6 h-6 mr-2 text-purple-400" />
+              Top Astrocartography Influences
+            </h3>
 
             <div className="grid md:grid-cols-3 gap-6">
               {cities.map((city, index) => (
@@ -166,9 +219,18 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                     </div>
                   </div>
                   <p className="text-slate-600 mb-2">{city.country}</p>
-                  <div className="flex items-center text-slate-500 text-sm mb-6">
-                    <Users className="w-4 h-4 mr-1" />
-                    <span>{city.population} • {city.distance} away</span>
+                  <div className="flex items-center text-slate-500 text-sm mb-4">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    <span>Distance from Virginia Beach: {city.distance}</span>
+                  </div>
+
+                  {/* Love Lines / Line Information */}
+                  <div className="mb-4">
+                    <h5 className="text-slate-800 font-semibold mb-2">
+                      {userData.influence === 'love' ? 'Love Lines:' : 'Line:'}
+                    </h5>
+                    <p className="text-purple-600 font-medium text-sm mb-2">{city.lines}</p>
+                    <p className="text-slate-700 text-sm">{city.meaning}</p>
                   </div>
 
                   {/* Action Links */}
