@@ -76,15 +76,6 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
     }
   };
 
-  const getInfluenceIcon = () => {
-    switch (userData.influence) {
-      case 'love': return Heart;
-      case 'career': return Briefcase;
-      case 'wealth': return DollarSign;
-      default: return Star;
-    }
-  };
-
   const getAvatarDetails = () => {
     const avatars = {
       apollo: { color: 'bg-gradient-to-br from-yellow-300 to-orange-300', symbol: '☀️' },
@@ -123,7 +114,6 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
   const avatarDetails = getAvatarDetails();
   const mainBulletPoints = getMainBulletPoints();
-  const InfluenceIcon = getInfluenceIcon();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
@@ -133,19 +123,16 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100 mb-6">
           {/* Avatar and Header */}
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="flex items-center justify-center mb-4">
               <div className={`w-24 h-24 rounded-full ${avatarDetails.color} flex items-center justify-center text-4xl shadow-lg`}>
                 {avatarDetails.symbol}
-              </div>
-              <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${getInfluenceColor()} flex items-center justify-center shadow-lg`}>
-                <InfluenceIcon className="w-8 h-8 text-white" />
               </div>
             </div>
             <h2 className="text-4xl font-bold text-slate-800 mb-4">
               Your Cosmic Insights
             </h2>
             <p className="text-slate-600 text-lg">
-              Based on your birth chart, here are the perfect cities for your {userData.influence} journey
+              Based on your birth chart, here are the perfect cities for your <span className="font-bold">{userData.influence} journey</span>
             </p>
           </div>
 
