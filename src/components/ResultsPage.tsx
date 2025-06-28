@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft, Briefcase, Calendar, Building } from 'lucide-react';
+import { MapPin, Users, Star, Share2, ArrowLeft, Briefcase, Calendar, Building, Heart, DollarSign } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { UserData, CityRecommendation } from '../types';
 
@@ -26,24 +26,6 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
       { name: 'Lagos', country: 'Nigeria', distance: '2,400 miles', population: '675,218' }
     ];
 
-    const reasonsByInfluence = {
-      love: [
-        'Venus Ascendant (AC) Line – Boosts attractiveness, romance, and personal magnetism in relationships.',
-        'Venus Descendant (DC) Line – Draws loving, romantic, and loyal partners into your life.',
-        'Moon Descendant (DC) Line – Deepens emotional bonds and supports nurturing, heartfelt relationships.'
-      ],
-      career: [
-        'Sun Midheaven (MC) Line – Puts you in the spotlight and supports leadership, confidence, and career visibility.',
-        'Saturn Midheaven (MC) Line – Favors discipline, responsibility, and long-term career mastery—slow climb, lasting rewards.',
-        'Mars Midheaven (MC) Line – Sparks ambition, drive, and bold career moves, especially in competitive or entrepreneurial fields.'
-      ],
-      wealth: [
-        'Jupiter Ascendant (AC) Line – Attracts luck, expansion, and financial opportunities through personal initiative and charisma.',
-        'Venus Ascendant (AC) Line – Boosts your ability to attract wealth through relationships, charm, and favorable circumstances.',
-        'Pluto Midheaven (MC) Line – Brings power, transformation, and potential for major financial gains (especially in finance, tech, or psychology), but requires resilience.'
-      ]
-    };
-
     const nextStepsByInfluence = {
       love: {
         title: 'Find Local Dating Events',
@@ -64,7 +46,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
     return baseCities.map(city => ({
       ...city,
-      reasons: reasonsByInfluence[userData.influence!],
+      reasons: [],
       nextStep: nextStepsByInfluence[userData.influence!]
     }));
   };
@@ -91,6 +73,15 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
       case 'career': return 'from-blue-300 to-indigo-300';
       case 'wealth': return 'from-yellow-300 to-orange-300';
       default: return 'from-purple-300 to-blue-300';
+    }
+  };
+
+  const getInfluenceIcon = () => {
+    switch (userData.influence) {
+      case 'love': return Heart;
+      case 'career': return Briefcase;
+      case 'wealth': return DollarSign;
+      default: return Star;
     }
   };
 
@@ -132,6 +123,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
   const avatarDetails = getAvatarDetails();
   const mainBulletPoints = getMainBulletPoints();
+  const InfluenceIcon = getInfluenceIcon();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
@@ -141,8 +133,13 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100 mb-6">
           {/* Avatar and Header */}
           <div className="text-center mb-8">
-            <div className={`w-24 h-24 rounded-full ${avatarDetails.color} flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg`}>
-              {avatarDetails.symbol}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className={`w-24 h-24 rounded-full ${avatarDetails.color} flex items-center justify-center text-4xl shadow-lg`}>
+                {avatarDetails.symbol}
+              </div>
+              <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${getInfluenceColor()} flex items-center justify-center shadow-lg`}>
+                <InfluenceIcon className="w-8 h-8 text-white" />
+              </div>
             </div>
             <h2 className="text-4xl font-bold text-slate-800 mb-4">
               Your Cosmic Insights
@@ -182,23 +179,13 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                     </div>
                   </div>
                   <p className="text-slate-600 mb-2">{city.country}</p>
-                  <div className="flex items-center text-slate-500 text-sm mb-4">
+                  <div className="flex items-center text-slate-500 text-sm mb-6">
                     <Users className="w-4 h-4 mr-1" />
                     <span>{city.population} • {city.distance} away</span>
                   </div>
-                  
-                  {/* Astrological Reasons */}
-                  <div className="space-y-2 mb-6">
-                    {city.reasons.map((reason, idx) => (
-                      <div key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <p className="text-slate-700 text-sm">{reason}</p>
-                      </div>
-                    ))}
-                  </div>
 
                   {/* Action Links */}
-                  <div className="border-t border-slate-200 pt-4 space-y-3">
+                  <div className="space-y-3">
                     <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-300 to-indigo-300 text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center">
                       <Briefcase className="w-4 h-4 mr-2" />
                       Job Opportunities
