@@ -28,7 +28,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
         {/* Description */}
         <div className="mb-12 max-w-2xl mx-auto">
           <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-6">
-            Unlock personalized astrological insights that guide you toward the perfect cities for love, career, and wealth based on your unique cosmic blueprint.
+            Unlock personalized astrological insights that guide you toward the perfect places for love, career, and wealth based on your astrological birth chart
           </p>
         </div>
 
