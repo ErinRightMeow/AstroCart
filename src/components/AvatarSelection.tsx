@@ -12,26 +12,36 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
   const avatars = [
     { 
       id: 'apollo', 
+      name: 'Apollo',
+      description: 'God of Sun & Music',
       color: 'bg-gradient-to-br from-yellow-300 to-orange-300',
       symbol: '☀️'
     },
     { 
       id: 'athena', 
+      name: 'Athena',
+      description: 'Goddess of Wisdom',
       color: 'bg-gradient-to-br from-blue-300 to-indigo-300',
       symbol: '🦉'
     },
     { 
       id: 'venus', 
+      name: 'Venus',
+      description: 'Goddess of Love',
       color: 'bg-gradient-to-br from-pink-300 to-rose-300',
       symbol: '💕'
     },
     { 
       id: 'mercury', 
+      name: 'Mercury',
+      description: 'Messenger of Gods',
       color: 'bg-gradient-to-br from-purple-300 to-violet-300',
       symbol: '⚡'
     },
     { 
       id: 'diana', 
+      name: 'Diana',
+      description: 'Goddess of Hunt',
       color: 'bg-gradient-to-br from-green-300 to-emerald-300',
       symbol: '🏹'
     }
@@ -53,7 +63,7 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
             Choose Your Divine Guide
           </h2>
           <p className="text-slate-600 text-center mb-8">
-            Select a mythological deity that resonates with your cosmic journey
+            Select a mythological deity that resonates with your cosmic journey. They will stay with you along your path.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
@@ -73,9 +83,17 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
                   </div>
                 )}
                 
-                <div className={`w-20 h-20 rounded-full ${avatar.color} flex items-center justify-center text-3xl mx-auto shadow-lg`}>
+                <div className={`w-20 h-20 rounded-full ${avatar.color} flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg`}>
                   {avatar.symbol}
                 </div>
+                
+                <h3 className={`text-lg font-bold mb-1 ${selectedAvatar === avatar.id ? 'text-slate-800' : 'text-slate-800'}`}>
+                  {avatar.name}
+                </h3>
+                
+                <p className={`text-sm ${selectedAvatar === avatar.id ? 'text-slate-600' : 'text-slate-500'}`}>
+                  {avatar.description}
+                </p>
               </button>
             ))}
           </div>
