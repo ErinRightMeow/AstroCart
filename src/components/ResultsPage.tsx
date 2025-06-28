@@ -38,9 +38,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
         'Optimal timing for career advancement'
       ],
       wealth: [
-        'Jupiter line activation for abundance',
-        'Solar return chart shows financial growth',
-        'Favorable Venus-Pluto aspects for investments'
+        'Cities with the strongest astrological alignment for your wealth goals',
+        'Locations where planetary influences support your personal growth and success',
+        'Places with optimal cosmic timing for major life decisions and opportunities'
       ]
     };
 
@@ -137,15 +137,15 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
             <div className="mb-6 space-y-2">
               <div className="flex items-start">
                 <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Cities with the strongest astrological alignment for your {userData.influence} goals</p>
+                <p className="text-slate-700">Jupiter line activation for abundance</p>
               </div>
               <div className="flex items-start">
                 <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Locations where planetary influences support your personal growth and success</p>
+                <p className="text-slate-700">Solar return chart shows financial growth</p>
               </div>
               <div className="flex items-start">
                 <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                <p className="text-slate-700">Places with optimal cosmic timing for major life decisions and opportunities</p>
+                <p className="text-slate-700">Favorable Venus-Pluto aspects for investments</p>
               </div>
             </div>
 
