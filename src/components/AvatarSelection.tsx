@@ -10,18 +10,41 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
   const [selectedAvatar, setSelectedAvatar] = useState<string>('');
 
   const avatars = [
-    { id: 'avatar1', color: 'bg-blue-300', initials: 'A' },
-    { id: 'avatar2', color: 'bg-green-300', initials: 'B' },
-    { id: 'avatar3', color: 'bg-purple-300', initials: 'C' },
-    { id: 'avatar4', color: 'bg-pink-300', initials: 'D' },
-    { id: 'avatar5', color: 'bg-yellow-300', initials: 'E' },
-    { id: 'avatar6', color: 'bg-red-300', initials: 'F' },
-    { id: 'avatar7', color: 'bg-indigo-300', initials: 'G' },
-    { id: 'avatar8', color: 'bg-teal-300', initials: 'H' },
-    { id: 'avatar9', color: 'bg-orange-300', initials: 'I' },
-    { id: 'avatar10', color: 'bg-cyan-300', initials: 'J' },
-    { id: 'avatar11', color: 'bg-emerald-300', initials: 'K' },
-    { id: 'avatar12', color: 'bg-violet-300', initials: 'L' }
+    { 
+      id: 'apollo', 
+      name: 'Apollo',
+      description: 'God of Sun & Music',
+      color: 'bg-gradient-to-br from-yellow-300 to-orange-300',
+      symbol: '☀️'
+    },
+    { 
+      id: 'athena', 
+      name: 'Athena',
+      description: 'Goddess of Wisdom',
+      color: 'bg-gradient-to-br from-blue-300 to-indigo-300',
+      symbol: '🦉'
+    },
+    { 
+      id: 'venus', 
+      name: 'Venus',
+      description: 'Goddess of Love',
+      color: 'bg-gradient-to-br from-pink-300 to-rose-300',
+      symbol: '💕'
+    },
+    { 
+      id: 'mercury', 
+      name: 'Mercury',
+      description: 'Messenger of Gods',
+      color: 'bg-gradient-to-br from-purple-300 to-violet-300',
+      symbol: '⚡'
+    },
+    { 
+      id: 'diana', 
+      name: 'Diana',
+      description: 'Goddess of Hunt',
+      color: 'bg-gradient-to-br from-green-300 to-emerald-300',
+      symbol: '🏹'
+    }
   ];
 
   const handleContinue = () => {
@@ -37,31 +60,40 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100">
           <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
-            Choose Your Avatar
+            Choose Your Divine Guide
           </h2>
           <p className="text-slate-600 text-center mb-8">
-            Select an avatar that represents you
+            Select a mythological deity that resonates with your cosmic journey
           </p>
 
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
             {avatars.map((avatar) => (
               <button
                 key={avatar.id}
                 onClick={() => setSelectedAvatar(avatar.id)}
-                className={`group relative p-4 rounded-2xl transition-all duration-300 transform hover:scale-110 ${
+                className={`group relative p-6 rounded-2xl transition-all duration-300 transform hover:scale-105 ${
                   selectedAvatar === avatar.id
-                    ? 'bg-gradient-to-r from-purple-200 to-blue-200 shadow-lg shadow-purple-200'
-                    : 'bg-white hover:bg-slate-50 border border-slate-200'
+                    ? 'bg-gradient-to-r from-purple-200 to-blue-200 shadow-xl shadow-purple-200 border-2 border-purple-300'
+                    : 'bg-white hover:bg-slate-50 border border-slate-200 hover:shadow-lg'
                 }`}
               >
-                <div className={`w-12 h-12 rounded-full ${avatar.color} flex items-center justify-center text-white font-bold text-lg mx-auto mb-2`}>
-                  {avatar.initials}
-                </div>
                 {selectedAvatar === avatar.id && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✓</span>
+                  <div className="absolute -top-3 -right-3 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-white text-sm">✓</span>
                   </div>
                 )}
+                
+                <div className={`w-20 h-20 rounded-full ${avatar.color} flex items-center justify-center text-3xl mx-auto mb-4 shadow-lg`}>
+                  {avatar.symbol}
+                </div>
+                
+                <h3 className={`text-lg font-bold mb-1 ${selectedAvatar === avatar.id ? 'text-slate-800' : 'text-slate-800'}`}>
+                  {avatar.name}
+                </h3>
+                
+                <p className={`text-sm ${selectedAvatar === avatar.id ? 'text-slate-600' : 'text-slate-500'}`}>
+                  {avatar.description}
+                </p>
               </button>
             ))}
           </div>
