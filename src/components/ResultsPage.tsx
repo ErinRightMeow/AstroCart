@@ -28,19 +28,19 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
     const reasonsByInfluence = {
       love: [
-        'Strong Venus planetary line alignment',
-        'High concentration of compatible energy',
-        'Favorable lunar aspects for relationships'
+        'Venus Ascendant (AC) Line – Boosts attractiveness, romance, and personal magnetism in relationships.',
+        'Venus Descendant (DC) Line – Draws loving, romantic, and loyal partners into your life.',
+        'Moon Descendant (DC) Line – Deepens emotional bonds and supports nurturing, heartfelt relationships.'
       ],
       career: [
-        'Powerful Mercury-Jupiter conjunction',
-        'Enhanced professional networking energy',
-        'Optimal timing for career advancement'
+        'Sun Midheaven (MC) Line – Puts you in the spotlight and supports leadership, confidence, and career visibility.',
+        'Saturn Midheaven (MC) Line – Favors discipline, responsibility, and long-term career mastery—slow climb, lasting rewards.',
+        'Mars Midheaven (MC) Line – Sparks ambition, drive, and bold career moves, especially in competitive or entrepreneurial fields.'
       ],
       wealth: [
-        'Cities with the strongest astrological alignment for your wealth goals',
-        'Locations where planetary influences support your personal growth and success',
-        'Places with optimal cosmic timing for major life decisions and opportunities'
+        'Jupiter Ascendant (AC) Line – Attracts luck, expansion, and financial opportunities through personal initiative and charisma.',
+        'Venus Ascendant (AC) Line – Boosts your ability to attract wealth through relationships, charm, and favorable circumstances.',
+        'Pluto Midheaven (MC) Line – Brings power, transformation, and potential for major financial gains (especially in finance, tech, or psychology), but requires resilience.'
       ]
     };
 
@@ -107,23 +107,23 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
 
   const getMainBulletPoints = () => {
     switch (userData.influence) {
-      case 'wealth':
-        return [
-          'Jupiter Midheaven (MC) Line – Brings big career opportunities, luck, and public success.',
-          'Venus Midheaven (MC) Line – Attracts money through charm, beauty, and social visibility.',
-          'Venus Ascendant (AC) Line – Makes you magnetic to people and wealth-building connections.'
-        ];
       case 'love':
         return [
-          'Strong Venus planetary line alignment',
-          'High concentration of compatible energy',
-          'Favorable lunar aspects for relationships'
+          'Venus Ascendant (AC) Line – Boosts attractiveness, romance, and personal magnetism in relationships.',
+          'Venus Descendant (DC) Line – Draws loving, romantic, and loyal partners into your life.',
+          'Moon Descendant (DC) Line – Deepens emotional bonds and supports nurturing, heartfelt relationships.'
         ];
       case 'career':
         return [
-          'Powerful Mercury-Jupiter conjunction',
-          'Enhanced professional networking energy',
-          'Optimal timing for career advancement'
+          'Sun Midheaven (MC) Line – Puts you in the spotlight and supports leadership, confidence, and career visibility.',
+          'Saturn Midheaven (MC) Line – Favors discipline, responsibility, and long-term career mastery—slow climb, lasting rewards.',
+          'Mars Midheaven (MC) Line – Sparks ambition, drive, and bold career moves, especially in competitive or entrepreneurial fields.'
+        ];
+      case 'wealth':
+        return [
+          'Jupiter Ascendant (AC) Line – Attracts luck, expansion, and financial opportunities through personal initiative and charisma.',
+          'Venus Ascendant (AC) Line – Boosts your ability to attract wealth through relationships, charm, and favorable circumstances.',
+          'Pluto Midheaven (MC) Line – Brings power, transformation, and potential for major financial gains (especially in finance, tech, or psychology), but requires resilience.'
         ];
       default:
         return [];
@@ -161,7 +161,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
               </h3>
               
               {/* Three bullet points - centered */}
-              <div className="max-w-2xl mx-auto space-y-2">
+              <div className="max-w-4xl mx-auto space-y-2">
                 {mainBulletPoints.map((point, index) => (
                   <div key={index} className="flex items-start justify-center">
                     <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
