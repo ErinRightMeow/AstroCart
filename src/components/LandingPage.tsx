@@ -30,20 +30,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted }) => {
           <p className="text-lg md:text-xl text-indigo-100 leading-relaxed mb-6">
             Unlock personalized astrological insights that guide you toward the perfect cities for love, career, and wealth based on your unique cosmic blueprint.
           </p>
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <div className="text-2xl mb-2">💝</div>
-              <h3 className="font-semibold text-indigo-200">Love Alignment</h3>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <div className="text-2xl mb-2">💼</div>
-              <h3 className="font-semibold text-indigo-200">Career Growth</h3>
-            </div>
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-              <div className="text-2xl mb-2">💰</div>
-              <h3 className="font-semibold text-indigo-200">Wealth Creation</h3>
-            </div>
-          </div>
         </div>
 
         {/* CTA Button */}

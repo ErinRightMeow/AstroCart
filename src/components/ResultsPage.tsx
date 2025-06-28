@@ -1,7 +1,7 @@
 import React from 'react';
-import { MapPin, Users, Star, ExternalLink, Share2, ArrowLeft } from 'lucide-react';
+import { MapPin, Users, Star, ExternalLink, Share2, ArrowRight } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
-import { UserData, CityRecommendation, ActionableInsight } from '../types';
+import { UserData, CityRecommendation } from '../types';
 
 interface ResultsPageProps {
   userData: UserData;
@@ -9,9 +9,17 @@ interface ResultsPageProps {
   onStartOver: () => void;
 }
 
+interface CityWithNextStep extends CityRecommendation {
+  nextStep: {
+    title: string;
+    description: string;
+    action: string;
+  };
+}
+
 export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onStartOver }) => {
   // Mock data for demonstration - in production, this would come from Swiss Ephemeris calculations
-  const getCityRecommendations = (): CityRecommendation[] => {
+  const getCityRecommendations = (): CityWithNextStep[] => {
     const baseCities = [
       { name: 'Austin', country: 'USA', distance: '1,200 miles', population: '978,908' },
       { name: 'Barcelona', country: 'Spain', distance: '5,500 miles', population: '1.6M' },
@@ -36,81 +44,32 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
       ]
     };
 
+    const nextStepsByInfluence = {
+      love: {
+        title: 'Find Local Dating Events',
+        description: 'Connect with singles in your area through organized meetups and social gatherings',
+        action: 'Browse Events'
+      },
+      career: {
+        title: 'Explore Job Opportunities',
+        description: 'Search for career opportunities and professional networking events in this city',
+        action: 'View Jobs'
+      },
+      wealth: {
+        title: 'Connect with Financial Advisors',
+        description: 'Find certified financial planners and investment opportunities in this location',
+        action: 'Find Advisors'
+      }
+    };
+
     return baseCities.map(city => ({
       ...city,
-      reasons: reasonsByInfluence[userData.influence!]
+      reasons: reasonsByInfluence[userData.influence!],
+      nextStep: nextStepsByInfluence[userData.influence!]
     }));
   };
 
-  const getActionableInsights = (): ActionableInsight[] => {
-    const insightsByInfluence = {
-      love: [
-        {
-          title: 'Local Dating Events',
-          description: 'Join speed dating and singles mixers in your recommended city',
-          link: 'https://www.meetup.com',
-          platform: 'Meetup'
-        },
-        {
-          title: 'Relationship Coaching',
-          description: 'Connect with certified relationship coaches in the area',
-          link: 'https://www.psychology.com',
-          platform: 'Psychology Today'
-        },
-        {
-          title: 'Social Activities',
-          description: 'Explore hobby groups and social clubs for meaningful connections',
-          link: 'https://www.eventbrite.com',
-          platform: 'Eventbrite'
-        }
-      ],
-      career: [
-        {
-          title: 'Job Opportunities',
-          description: 'Browse open positions in your field in the recommended cities',
-          link: 'https://www.linkedin.com',
-          platform: 'LinkedIn'
-        },
-        {
-          title: 'Networking Events',
-          description: 'Attend professional meetups and industry conferences',
-          link: 'https://www.meetup.com',
-          platform: 'Meetup'
-        },
-        {
-          title: 'Career Development',
-          description: 'Find mentors and career coaches in your target location',
-          link: 'https://www.score.org',
-          platform: 'SCORE'
-        }
-      ],
-      wealth: [
-        {
-          title: 'Financial Advisors',
-          description: 'Connect with certified financial planners in your area',
-          link: 'https://www.cfp.net',
-          platform: 'CFP Board'
-        },
-        {
-          title: 'Investment Opportunities',
-          description: 'Explore local real estate and investment options',
-          link: 'https://www.biggerpockets.com',
-          platform: 'BiggerPockets'
-        },
-        {
-          title: 'Business Networking',
-          description: 'Join entrepreneur groups and business chambers',
-          link: 'https://www.chamber.com',
-          platform: 'Chamber of Commerce'
-        }
-      ]
-    };
-
-    return insightsByInfluence[userData.influence!];
-  };
-
   const cities = getCityRecommendations();
-  const insights = getActionableInsights();
 
   const handleShare = () => {
     const shareText = `I just discovered my perfect cities for ${userData.influence} using AstroGuide! ✨`;
@@ -123,6 +82,15 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
     } else {
       navigator.clipboard.writeText(`${shareText} ${window.location.href}`);
       alert('Results copied to clipboard!');
+    }
+  };
+
+  const getInfluenceColor = () => {
+    switch (userData.influence) {
+      case 'love': return 'from-pink-500 to-rose-500';
+      case 'career': return 'from-blue-500 to-indigo-500';
+      case 'wealth': return 'from-yellow-500 to-orange-500';
+      default: return 'from-indigo-500 to-purple-500';
     }
   };
 
@@ -162,7 +130,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                     <Users className="w-4 h-4 mr-1" />
                     <span>{city.population} • {city.distance} away</span>
                   </div>
-                  <div className="space-y-2">
+                  
+                  {/* Astrological Reasons */}
+                  <div className="space-y-2 mb-6">
                     {city.reasons.map((reason, idx) => (
                       <div key={idx} className="flex items-start">
                         <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
@@ -170,30 +140,16 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                       </div>
                     ))}
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Actionable Insights */}
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold text-white mb-6">
-              Recommended Actions
-            </h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {insights.map((insight, index) => (
-                <div key={index} className="bg-white/20 rounded-xl p-6 hover:bg-white/30 transition-all duration-300">
-                  <h4 className="text-lg font-bold text-white mb-3">{insight.title}</h4>
-                  <p className="text-indigo-200 mb-4">{insight.description}</p>
-                  <a
-                    href={insight.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-medium transition-colors duration-200"
-                  >
-                    Visit {insight.platform}
-                    <ExternalLink className="w-4 h-4 ml-1" />
-                  </a>
+                  {/* Next Step */}
+                  <div className="border-t border-white/20 pt-4">
+                    <h5 className="text-white font-semibold mb-2">{city.nextStep.title}</h5>
+                    <p className="text-indigo-200 text-sm mb-3">{city.nextStep.description}</p>
+                    <button className={`w-full px-4 py-2 bg-gradient-to-r ${getInfluenceColor()} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center`}>
+                      {city.nextStep.action}
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
