@@ -1,7 +1,9 @@
 import React from 'react';
-import { MapPin, Users, Star, Share2, ArrowLeft, Briefcase, Calendar, Building, Heart, DollarSign } from 'lucide-react';
+import { MapPin, Users, Star, Share2, ArrowLeft, Briefcase, Calendar, Building, Save } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 import { UserData, CityRecommendation } from '../types';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 interface ResultsPageProps {
   userData: UserData;
@@ -20,6 +22,35 @@ interface CityWithAstroData extends CityRecommendation {
 }
 
 export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onStartOver }) => {
+  const { user } = useAuth();
+
+  const saveReading = async () => {
+    if (!user) {
+      alert('Please sign in to save your reading');
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('readings')
+        .insert({
+          user_id: user.id,
+          birth_date: userData.birthDate,
+          birth_time: userData.birthTime,
+          birth_location: userData.birthLocation,
+          current_location: userData.currentLocation,
+          avatar: userData.avatar,
+          influence: userData.influence!
+        });
+
+      if (error) throw error;
+      alert('Reading saved successfully!');
+    } catch (error) {
+      console.error('Error saving reading:', error);
+      alert('Failed to save reading. Please try again.');
+    }
+  };
+
   const getCityRecommendations = (): CityWithAstroData[] => {
     const nextStepsByInfluence = {
       love: {
@@ -139,7 +170,6 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
         }
       ];
     } else {
-      // Fallback - should not reach here with current flow
       return [];
     }
   };
@@ -266,6 +296,15 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back
             </button>
+            {user && (
+              <button
+                onClick={saveReading}
+                className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-300 to-purple-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-200 transform hover:scale-105 transition-all duration-200"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                Save Reading
+              </button>
+            )}
             <button
               onClick={handleShare}
               className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-200 transform hover:scale-105 transition-all duration-200"

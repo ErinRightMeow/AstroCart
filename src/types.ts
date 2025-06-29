@@ -21,3 +21,16 @@ export interface ActionableInsight {
   link: string;
   platform: string;
 }
+
+export interface SavedReading {
+  id: string;
+  user_id: string;
+  birth_date: string;
+  birth_time: string;
+  birth_location: string;
+  current_location: string;
+  avatar: string;
+  influence: 'love' | 'career' | 'wealth';
+  created_at: string;
+  updated_at: string;
+}
