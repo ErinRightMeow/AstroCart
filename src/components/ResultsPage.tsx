@@ -1,7 +1,7 @@
 import React from 'react';
-import { MapPin, Users, Star, ExternalLink, Share2, ArrowRight } from 'lucide-react';
-import { ProgressIndicator } from './ProgressIndicator';
-import { UserData, CityRecommendation } from '../types';
+import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { UserData, ApiCityData, ApiResults } from '../types';
+import mockResults from '../../swisseph-api/data/mockResults.json';
 
 interface ResultsPageProps {
   userData: UserData;
@@ -9,81 +9,50 @@ interface ResultsPageProps {
   onStartOver: () => void;
 }
 
-interface CityWithNextStep extends CityRecommendation {
-  nextStep: {
-    title: string;
-    description: string;
-    action: string;
-  };
-}
-
 export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onStartOver }) => {
-  // Mock data for demonstration - in production, this would come from Swiss Ephemeris calculations
-  const getCityRecommendations = (): CityWithNextStep[] => {
-    const baseCities = [
-      { name: 'Austin', country: 'USA', distance: '1,200 miles', population: '978,908' },
-      { name: 'Barcelona', country: 'Spain', distance: '5,500 miles', population: '1.6M' },
-      { name: 'Vancouver', country: 'Canada', distance: '2,400 miles', population: '675,218' }
-    ];
+  // Use the imported mock data instead of fetching from an API
+  const allResults: ApiResults = mockResults;
+  
+  const relevantCities = (userData.selectedPlanet && allResults[userData.selectedPlanet]) 
+    ? allResults[userData.selectedPlanet] 
+    : [];
 
-    const reasonsByInfluence = {
-      love: [
-        'Strong Venus planetary line alignment',
-        'High concentration of compatible energy',
-        'Favorable lunar aspects for relationships'
-      ],
-      career: [
-        'Powerful Mercury-Jupiter conjunction',
-        'Enhanced professional networking energy',
-        'Optimal timing for career advancement'
-      ],
-      wealth: [
-        'Jupiter line activation for abundance',
-        'Solar return chart shows financial growth',
-        'Favorable Venus-Pluto aspects for investments'
-      ]
-    };
-
-    const nextStepsByInfluence = {
-      love: {
-        title: 'Find Local Dating Events',
-        description: 'Connect with singles in your area through organized meetups and social gatherings',
-        action: 'Browse Events'
-      },
-      career: {
-        title: 'Explore Job Opportunities',
-        description: 'Search for career opportunities and professional networking events in this city',
-        action: 'View Jobs'
-      },
-      wealth: {
-        title: 'Connect with Financial Advisors',
-        description: 'Find certified financial planners and investment opportunities in this location',
-        action: 'Find Advisors'
-      }
-    };
-
-    return baseCities.map(city => ({
-      ...city,
-      reasons: reasonsByInfluence[userData.influence!],
-      nextStep: nextStepsByInfluence[userData.influence!]
-    }));
-  };
-
-  const cities = getCityRecommendations();
+  // Take the top 3 cities for display
+  const cities = relevantCities.slice(0, 3);
 
   const handleShare = () => {
-    const shareText = `I just discovered my perfect cities for ${userData.influence} using AstroGuide! ✨`;
+    const shareText = `I just discovered my perfect cities for ${userData.influence} using AstroCart! ✨`;
     if (navigator.share) {
       navigator.share({
-        title: 'My AstroGuide Results',
+        title: 'My AstroCart Results',
         text: shareText,
         url: window.location.href
       });
     } else {
       navigator.clipboard.writeText(`${shareText} ${window.location.href}`);
-      alert('Results copied to clipboard!');
+      alert('Link to results copied to clipboard!');
     }
   };
+
+  // This static data can be used to enrich the UI for each city
+  const nextStepsByInfluence = {
+    love: {
+      title: 'Find Local Dating Events',
+      description: 'Connect with singles in your area through organized meetups and social gatherings',
+      action: 'Browse Events'
+    },
+    career: {
+      title: 'Explore Job Opportunities',
+      description: 'Search for career opportunities and professional networking events in this city',
+      action: 'View Jobs'
+    },
+    wealth: {
+      title: 'Connect with Financial Advisors',
+      description: 'Find certified financial planners and investment opportunities in this location',
+      action: 'Find Advisors'
+    }
+  };
+  const nextStep = nextStepsByInfluence[userData.influence!] || nextStepsByInfluence.career;
 
   const getInfluenceColor = () => {
     switch (userData.influence) {
@@ -93,13 +62,16 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
       default: return 'from-indigo-500 to-purple-500';
     }
   };
+  
+  const renderContent = () => {
+    if (cities.length === 0) {
+      return <div className="text-center text-yellow-300 bg-yellow-900/50 p-6 rounded-lg">
+        {`No cities found with a strong ${userData.selectedPlanet} influence. Try another focus.`}
+      </div>;
+    }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-4">
-      <div className="max-w-6xl mx-auto">
-        <ProgressIndicator currentStep={4} totalSteps={4} />
-        
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl mb-6">
+    return (
+      <>
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-white mb-4">
               Your Cosmic Insights
@@ -110,43 +82,40 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
           </div>
 
           {/* City Recommendations */}
-          <div className="mb-8">
+          <div>
             <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
               <MapPin className="w-6 h-6 mr-2 text-yellow-400" />
               Top 3 Recommended Cities
             </h3>
             <div className="grid md:grid-cols-3 gap-6">
               {cities.map((city, index) => (
-                <div key={city.name} className="bg-white/20 rounded-xl p-6 hover:bg-white/30 transition-all duration-300">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-bold text-white">{city.name}</h4>
+                <div key={city.city} className="bg-white/20 rounded-xl p-6 hover:bg-white/30 transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <h4 className="text-xl font-bold text-white">{city.city}</h4>
                     <div className="flex items-center text-yellow-400">
                       <Star className="w-5 h-5 mr-1 fill-current" />
                       <span className="text-sm font-medium">#{index + 1}</span>
                     </div>
                   </div>
-                  <p className="text-indigo-200 mb-2">{city.country}</p>
                   <div className="flex items-center text-indigo-300 text-sm mb-4">
                     <Users className="w-4 h-4 mr-1" />
-                    <span>{city.population} • {city.distance} away</span>
+                    <span>{city.population.toLocaleString()} • {Math.round(city.distance_km).toLocaleString()} km away</span>
                   </div>
                   
-                  {/* Astrological Reasons */}
-                  <div className="space-y-2 mb-6">
-                    {city.reasons.map((reason, idx) => (
-                      <div key={idx} className="flex items-start">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <p className="text-white text-sm">{reason}</p>
-                      </div>
-                    ))}
+                  {/* Astrological Reason */}
+                  <div className="flex items-start mb-6">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <p className="text-white text-sm">
+                      Strong planetary influence with an orb of only <strong>{city.orb.toFixed(2)}°</strong>.
+                    </p>
                   </div>
 
                   {/* Next Step */}
                   <div className="border-t border-white/20 pt-4">
-                    <h5 className="text-white font-semibold mb-2">{city.nextStep.title}</h5>
-                    <p className="text-indigo-200 text-sm mb-3">{city.nextStep.description}</p>
+                    <h5 className="text-white font-semibold mb-2">{nextStep.title}</h5>
+                    <p className="text-indigo-200 text-sm mb-3">{nextStep.description}</p>
                     <button className={`w-full px-4 py-2 bg-gradient-to-r ${getInfluenceColor()} text-white font-medium rounded-lg hover:shadow-lg transition-all duration-200 flex items-center justify-center`}>
-                      {city.nextStep.action}
+                      {nextStep.action}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </button>
                   </div>
@@ -154,23 +123,39 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
               ))}
             </div>
           </div>
+      </>
+    );
+  };
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl mb-6">
+          {renderContent()}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={onBack}
+              className="flex items-center justify-center px-6 py-3 bg-white/20 text-white font-medium rounded-xl hover:bg-white/30 transition-all duration-200"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Change Focus
+            </button>
             <button
               onClick={handleShare}
               className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105 transition-all duration-200"
             >
               <Share2 className="w-5 h-5 mr-2" />
-              Share Results
+              Share My Results
             </button>
             <button
               onClick={onStartOver}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-200"
+              className="flex items-center justify-center px-6 py-3 bg-white/20 text-white font-medium rounded-xl hover:bg-white/30 transition-all duration-200"
             >
               Start New Journey
             </button>
-          </div>
         </div>
       </div>
     </div>

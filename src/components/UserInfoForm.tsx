@@ -3,12 +3,7 @@ import { MapPin, Clock, Calendar } from 'lucide-react';
 import { ProgressIndicator } from './ProgressIndicator';
 
 interface UserInfoFormProps {
-  onNext: (data: {
-    birthDate: string;
-    birthTime: string;
-    birthLocation: string;
-    currentLocation: string;
-  }) => void;
+  onNext: (resultId: string) => void;
   onBack: () => void;
 }
 
@@ -20,6 +15,7 @@ export const UserInfoForm: React.FC<UserInfoFormProps> = ({ onNext, onBack }) =>
     currentLocation: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -33,17 +29,87 @@ export const UserInfoForm: React.FC<UserInfoFormProps> = ({ onNext, onBack }) =>
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      onNext(formData);
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({}); // Clear previous API errors
+
+    // --- Step 1: Geocode Birth Location ---
+    let birthCoords;
+    try {
+      const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+      if (!accessToken) {
+        throw new Error("Mapbox access token is not configured. Please contact support.");
+      }
+      
+      const geocodingUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(formData.birthLocation)}.json?access_token=${accessToken}&limit=1`;
+      const geoResponse = await fetch(geocodingUrl);
+      const geoData = await geoResponse.json();
+
+      if (!geoResponse.ok || !geoData.features || geoData.features.length === 0) {
+        throw new Error("Could not find this location. Please try a different address.");
+      }
+      
+      const [lon, lat] = geoData.features[0].center;
+      birthCoords = { lat, lon };
+
+    } catch (error: any) {
+      console.error('Geocoding failed:', error);
+      setErrors({ birthLocation: error.message || 'Invalid location. Please check the address.' });
+      setIsLoading(false);
+      return;
+    }
+    
+    // TODO: The planet selection should come from a future UI component.
+    // For now, we are using a default list of major planets.
+    const placeholderPlanets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"];
+
+    const apiRequestBody = {
+      birth_dt: `${formData.birthDate}T${formData.birthTime}:00`,
+      birth_lat: birthCoords.lat,
+      birth_lon: birthCoords.lon,
+      planets: placeholderPlanets,
+      orb_tolerance: 2.0 // Using default from API
+    };
+
+    try {
+      // In a production app, this URL should come from an environment variable
+      const response = await fetch('http://127.0.0.1:8000/astrocartography', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(apiRequestBody),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Handle HTTP errors from the API (e.g., 400, 500)
+        const errorMessage = data.detail || 'An unknown server error occurred.';
+        setErrors({ api: errorMessage });
+        return;
+      }
+
+      // On success, the API returns a result_id. Pass it to the next step.
+      onNext(data.result_id);
+
+    } catch (error) {
+      console.error('API call failed:', error);
+      setErrors({ api: 'Failed to connect to the server. Please check your connection and try again.' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-4 flex items-center justify-center">
       <div className="w-full max-w-2xl">
-        <ProgressIndicator currentStep={1} totalSteps={4} />
+        <ProgressIndicator currentStep={1} totalSteps={3} />
         
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
           <h2 className="text-3xl font-bold text-center text-white mb-2">
@@ -116,6 +182,10 @@ export const UserInfoForm: React.FC<UserInfoFormProps> = ({ onNext, onBack }) =>
               {errors.currentLocation && <p className="text-red-400 text-sm mt-1">{errors.currentLocation}</p>}
             </div>
 
+            {errors.api && (
+              <div className="text-center text-red-400 bg-red-900/50 p-3 rounded-lg">{errors.api}</div>
+            )}
+
             {/* Buttons */}
             <div className="flex gap-4 pt-6">
               <button
@@ -127,9 +197,10 @@ export const UserInfoForm: React.FC<UserInfoFormProps> = ({ onNext, onBack }) =>
               </button>
               <button
                 type="submit"
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-200"
+                disabled={isLoading}
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue
+                {isLoading ? 'Calculating...' : 'Continue'}
               </button>
             </div>
           </form>

@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 import uuid
@@ -31,6 +32,23 @@ app = FastAPI(
     title="Astro-Cartography API",
     description="API to find astrological power spots based on birth data.",
     version="1.2.0"
+)
+
+# --- CORS Middleware Setup ---
+# This allows the frontend (running on a different port) to communicate with the API.
+# It's crucial for development when your UI and API are on different "origins".
+origins = [
+    "http://localhost:5173",  # Your Vite frontend
+    "http://127.0.0.1:5173", # Also allow the IP address
+    "http://localhost:3000",  # A common port for Create React App
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
 )
 
 # --- Setup for Storing Results ---
