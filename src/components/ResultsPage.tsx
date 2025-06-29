@@ -215,7 +215,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4">
       <div className="max-w-6xl mx-auto">
-        <ProgressIndicator currentStep={4} totalSteps={4} />
+        <ProgressIndicator currentStep={5} totalSteps={5} />
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100 mb-6">
           {/* Avatar and Header */}

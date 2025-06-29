@@ -46,7 +46,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4 flex items-center justify-center">
       <div className="w-full max-w-4xl">
-        <ProgressIndicator currentStep={3} totalSteps={4} />
+        <ProgressIndicator currentStep={4} totalSteps={5} />
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100">
           <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
