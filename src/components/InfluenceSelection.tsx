@@ -50,7 +50,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100">
           <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
-            Choose Your Focus
+            Choose Your Influence
           </h2>
           <p className="text-slate-600 text-center mb-8">
             What aspect of your life would you like to enhance?
