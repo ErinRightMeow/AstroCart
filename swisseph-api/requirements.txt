@@ -1,6 +1,8 @@
 fastapi
-uvicorn
+uvicorn[standard]
 pandas
-geopy
-swisseph
-python-multipart
+pytz
+timezonefinder
+# The 'swisseph' library is a dependency for the calculation engine.
+# If it's not on PyPI, ensure it is installed in your environment.
+# For example: pip install path/to/swisseph-x.y.z.whl

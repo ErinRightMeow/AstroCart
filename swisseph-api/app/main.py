@@ -1,60 +1,164 @@
-# main.py
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Dict, Any, Optional
+import uuid
+import json
+from pathlib import Path
 
-# Relative import from the 'astro' package
-from .astro.city_matcher import get_top_cities_for_planets
+# Assuming your updated script is in a directory structure like:
+# project_folder/
+# ├── app/
+# │   ├── __init__.py
+# │   ├── main.py
+# │   └── astro/
+# │       ├── __init__.py
+# │       ├── city_matcher.py
+# │       └── world_cities.csv
+# To run, cd into project_folder and use: uvicorn app.main:app --reload
+try:
+    from app.astro.city_matcher import get_top_cities_for_planets
+except ImportError:
+    # Fallback for environments where the structure might differ
+    try:
+        from astro.city_matcher import get_top_cities_for_planets
+    except ImportError:
+        def get_top_cities_for_planets(*args, **kwargs):
+            raise RuntimeError("The 'city_matcher' module could not be found. "
+                               "Please ensure your project structure is correct.")
 
 app = FastAPI(
-    title="Astrocartography API",
-    description="An API for calculating astrocartography based on birth data.",
-    version="0.1.0",
+    title="Astro-Cartography API",
+    description="API to find astrological power spots based on birth data.",
+    version="1.2.0"
 )
 
-# Re-declare Pydantic model here or import it if defined elsewhere
-class AstroRequest(BaseModel):
-    birth_date: str = Field(..., example="1990-06-01T12:00:00")
-    planets: List[str] = Field(["Sun", "Moon", "Mercury", "Venus", "Mars"], example=["Sun", "Moon"])
-    orb_tolerance: float = Field(3.0, ge=0.0, le=10.0, example=2.5)
+# --- Setup for Storing Results ---
+# Create a directory to store results if it doesn't exist.
+RESULTS_DIR = Path(__file__).parent.parent / "data"
+RESULTS_DIR.mkdir(exist_ok=True)
 
-@app.post("/astrocartography")
-def astrocartography_post(request: AstroRequest):
-    """
-    Calculates astrocartography for given birth data and planets via POST request.
-    """
-    birth_dt = datetime.fromisoformat(request.birth_date)
-    results = get_top_cities_for_planets(
-        birth_dt, request.planets, request.orb_tolerance
+class AstroPostRequest(BaseModel):
+    birth_dt: datetime = Field(
+        ...,
+        description="The local date and time of birth (naive, without timezone).",
+        example="1992-11-03T14:45:00"
     )
-    return {"results": results}
+    birth_lat: float = Field(
+        ...,
+        description="The geographic latitude of the birth location.",
+        example=41.8781
+    )
+    birth_lon: float = Field(
+        ...,
+        description="The geographic longitude of the birth location.",
+        example=-87.6298
+    )
+    planets: List[str] = Field(
+        ...,
+        description="A list of planets to check.",
+        example=["Sun", "Moon", "Venus"]
+    )
+    orb_tolerance: float = Field(
+        default=2.0,
+        ge=0.0,
+        le=10.0,
+        description="The maximum allowed orb of influence in degrees.",
+        example=2.0
+    )
 
-@app.get("/astrocartography")
-def astrocartography_get(
-    birth_date: str = Query("1990-01-01T12:00:00", description="Birth date and time in ISO format (e.g., '1990-06-01T12:00:00')"),
-    planets: Optional[str] = Query(
-        "Sun,Moon,Mercury,Venus,Mars",
-        description="Comma-separated list of planets to include (e.g., 'Sun,Moon,Mars')"
-    ),
-    orb_tolerance: float = Query(3.0, ge=0.0, le=10.0, description="Orb tolerance for calculations (0.0 to 10.0)")
-):
+class AstroPostResponse(BaseModel):
+    result_id: str = Field(..., description="A unique ID to retrieve the results later.")
+    message: str = Field(..., description="A confirmation message.")
+
+@app.post("/astrocartography", response_model=AstroPostResponse)
+def astrocartography_post(request: AstroPostRequest):
     """
-    Calculates astrocartography for given birth data and planets via GET request.
+    Calculates astro-cartography locations and saves the result for later retrieval.
+    This is ideal for a multi-step user flow where results are shown on a different screen.
+    It returns a `result_id` which can be used with the `/results/{result_id}` endpoint.
     """
     try:
-        birth_dt = datetime.fromisoformat(birth_date)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid birth_date format. Use ISO format (e.g., '1990-06-01T12:00:00').")
+        results = get_top_cities_for_planets(
+            birth_dt=request.birth_dt,
+            birth_lat=request.birth_lat,
+            birth_lon=request.birth_lon,
+            planets=request.planets,
+            orb_tolerance=request.orb_tolerance
+        )
 
-    # Split the comma-separated string into a list of planets,
-    # filtering out any empty strings that result from extra commas.
-    planet_list = [p.strip() for p in planets.split(',')] if planets else []
+        # Generate a unique ID for this result set
+        result_id = str(uuid.uuid4())
+        result_file = RESULTS_DIR / f"{result_id}.json"
 
-    results = get_top_cities_for_planets(birth_dt, planet_list, orb_tolerance)
-    return {"results": results}
+        # Save results to a JSON file
+        with open(result_file, 'w') as f:
+            # The default encoder for json.dump can't handle datetime,
+            # but our results from city_matcher are serializable.
+            json.dump(results, f, indent=4)
 
-# Optional: Basic root endpoint
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the Astrocartography API. Go to /docs for API documentation."}
+        return {
+            "result_id": result_id,
+            "message": "Calculation successful. Use the result_id to fetch your astro-cartography data."
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An internal server error occurred during calculation.")
+
+
+@app.get("/astrocartography", response_model=Dict[str, Any])
+def astrocartography_get(
+    birth_dt: datetime = Query(..., description="Birth date and time in ISO format.", example="1992-11-03T14:45:00"),
+    birth_lat: float = Query(..., description="Geographic latitude of birth.", example=41.8781),
+    birth_lon: float = Query(..., description="Geographic longitude of birth.", example=-87.6298),
+    planets: str = Query("Sun,Moon,Venus", description="Comma-separated list of planets."),
+    orb_tolerance: float = Query(2.0, ge=0.0, le=10.0, description="Orb tolerance in degrees.")
+):
+    """
+    Calculates and returns astro-cartography locations directly in a single GET request.
+    This method is useful for quick testing or creating shareable links for immediate results.
+    """
+    try:
+        planet_list = [p.strip() for p in planets.split(',') if p.strip()]
+        if not planet_list:
+            raise ValueError("The 'planets' query parameter cannot be empty.")
+
+        results = get_top_cities_for_planets(
+            birth_dt=birth_dt,
+            birth_lat=birth_lat,
+            birth_lon=birth_lon,
+            planets=planet_list,
+            orb_tolerance=orb_tolerance
+        )
+        return results
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An internal server error occurred during calculation.")
+
+@app.get("/results/{result_id}", response_model=Dict[str, Any])
+def get_astrocartography_result(result_id: str):
+    """
+    Retrieves a previously calculated astro-cartography result by its ID.
+    """
+    # Basic security check for path traversal
+    if not result_id.isalnum() or ".." in result_id or "/" in result_id:
+        raise HTTPException(status_code=400, detail="Invalid result ID format.")
+
+    result_file = RESULTS_DIR / f"{result_id}.json"
+    if not result_file.is_file():
+        raise HTTPException(status_code=404, detail="Result not found.")
+
+    try:
+        return json.loads(result_file.read_text())
+    except Exception as e:
+        print(f"An error occurred reading result file: {e}")
+        raise HTTPException(status_code=500, detail="Could not retrieve result.")
+
+@app.get("/", include_in_schema=False)
+def root():
+    """A simple root endpoint to confirm the API is running."""
+    return {"message": "Astro-Cartography API is running. Navigate to /docs for the interactive API documentation."}
