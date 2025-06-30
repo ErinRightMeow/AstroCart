@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Users, Star, Share2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { UserData, ApiCityData, ApiResults } from '../types';
-import mockResults from '../../swisseph-api/data/mockResults.json';
 
 interface ResultsPageProps {
   userData: UserData;
@@ -10,15 +9,48 @@ interface ResultsPageProps {
 }
 
 export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onStartOver }) => {
-  // Use the imported mock data instead of fetching from an API
-  const allResults: ApiResults = mockResults;
-  
-  const relevantCities = (userData.selectedPlanet && allResults[userData.selectedPlanet]) 
-    ? allResults[userData.selectedPlanet] 
-    : [];
+  const [cities, setCities] = useState<ApiCityData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Take the top 3 cities for display
-  const cities = relevantCities.slice(0, 3);
+  useEffect(() => {
+    const fetchResults = async () => {
+      // Reset states on new fetch
+      setIsLoading(true);
+      setError(null);
+
+      if (!userData.resultId || !userData.selectedPlanet) {
+        setError("Could not load results. Please go back and try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch the results from the API using the resultId
+        const response = await fetch(`http://127.0.0.1:8000/results/${userData.resultId}`);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: 'An unknown error occurred.' }));
+          throw new Error(errorData.detail || `Server responded with status ${response.status}`);
+        }
+        
+        const allResults: ApiResults = await response.json();
+        const relevantCities = allResults[userData.selectedPlanet];
+
+        if (relevantCities && relevantCities.length > 0) {
+          setCities(relevantCities.slice(0, 3));
+        } else {
+          setError(`No cities found with a strong ${userData.selectedPlanet} influence. Try another focus.`);
+        }
+      } catch (e: any) {
+        console.error("Failed to fetch results:", e);
+        setError(e.message || "An unexpected error occurred while fetching your results.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [userData.resultId, userData.selectedPlanet]);
 
   const handleShare = () => {
     const shareText = `I just discovered my perfect cities for ${userData.influence} using AstroCart! ✨`;
@@ -64,10 +96,20 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
   };
   
   const renderContent = () => {
+    if (isLoading) {
+      return <div className="text-center text-white text-xl">Generating Your Cosmic Insights...</div>;
+    }
+
+    if (error) {
+      return <div className="text-center text-red-400 bg-red-900/50 p-6 rounded-lg">{error}</div>;
+    }
+
     if (cities.length === 0) {
-      return <div className="text-center text-yellow-300 bg-yellow-900/50 p-6 rounded-lg">
-        {`No cities found with a strong ${userData.selectedPlanet} influence. Try another focus.`}
-      </div>;
+      return (
+        <div className="text-center text-yellow-300 bg-yellow-900/50 p-6 rounded-lg">
+          {`No cities found with a strong ${userData.selectedPlanet} influence. Try another focus.`}
+        </div>
+      );
     }
 
     return (
@@ -99,7 +141,9 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
                   </div>
                   <div className="flex items-center text-indigo-300 text-sm mb-4">
                     <Users className="w-4 h-4 mr-1" />
-                    <span>{city.population.toLocaleString()} • {Math.round(city.distance_km).toLocaleString()} km away</span>
+                    <span>
+                      {(city.population ?? 0).toLocaleString()} pop. • {Math.round(city.distance_km ?? 0).toLocaleString()} km away
+                    </span>
                   </div>
                   
                   {/* Astrological Reason */}

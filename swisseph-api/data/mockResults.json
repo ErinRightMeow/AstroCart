@@ -1,0 +1,62 @@
+{
+    "Venus": [
+        {
+            "city": "Wiang Haeng",
+            "orb": 0.0059,
+            "lat": 19.557,
+            "lon": 98.6425
+        },
+        {
+            "city": "Lais",
+            "orb": 0.0095,
+            "lat": -3.5294,
+            "lon": 102.0497
+        },
+        {
+            "city": "Sabak Bernam",
+            "orb": 0.013,
+            "lat": 3.7698,
+            "lon": 100.9879
+        }
+    ],
+    "Mars": [
+        {
+            "city": "Howard",
+            "orb": 0.0008,
+            "lat": 37.47031,
+            "lon": -96.26361
+        },
+        {
+            "city": "Yaxe",
+            "orb": 0.001,
+            "lat": 16.72595,
+            "lon": -96.47191
+        },
+        {
+            "city": "San Lucas Quiavini",
+            "orb": 0.0012,
+            "lat": 16.89555,
+            "lon": -96.46813
+        }
+    ],
+    "Jupiter": [
+        {
+            "city": "Corani",
+            "orb": 0.0022,
+            "lat": -13.86871,
+            "lon": -70.60418
+        },
+        {
+            "city": "Nanortalik",
+            "orb": 0.0096,
+            "lat": 60.14169,
+            "lon": -45.24069
+        },
+        {
+            "city": "Santa Rosa",
+            "orb": 0.0135,
+            "lat": -14.61111,
+            "lon": -70.78611
+        }
+    ]
+}

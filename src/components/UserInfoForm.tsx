@@ -64,15 +64,14 @@ export const UserInfoForm: React.FC<UserInfoFormProps> = ({ onNext, onBack }) =>
       return;
     }
     
-    // TODO: The planet selection should come from a future UI component.
-    // For now, we are using a default list of major planets.
-    const placeholderPlanets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"];
+    // The planets are fixed to Venus, Mars, and Jupiter to align with the app's core influences.
+    const planetsForApi = ["Venus", "Mars", "Jupiter"];
 
     const apiRequestBody = {
       birth_dt: `${formData.birthDate}T${formData.birthTime}:00`,
       birth_lat: birthCoords.lat,
       birth_lon: birthCoords.lon,
-      planets: placeholderPlanets,
+      planets: planetsForApi,
       orb_tolerance: 2.0 // Using default from API
     };
 

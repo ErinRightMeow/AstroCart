@@ -105,19 +105,18 @@ def astrocartography_post(request: AstroPostRequest):
             orb_tolerance=request.orb_tolerance
         )
 
-        # Generate a unique ID for this result set
-        result_id = str(uuid.uuid4())
+        # Overwrite the mockResults.json file with the new data.
+        # This allows the frontend to fetch a consistent endpoint for the latest results.
+        result_id = "mockResults"
         result_file = RESULTS_DIR / f"{result_id}.json"
 
         # Save results to a JSON file
         with open(result_file, 'w') as f:
-            # The default encoder for json.dump can't handle datetime,
-            # but our results from city_matcher are serializable.
             json.dump(results, f, indent=4)
 
         return {
             "result_id": result_id,
-            "message": "Calculation successful. Use the result_id to fetch your astro-cartography data."
+            "message": "Calculation successful. Results have been updated."
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -163,7 +162,7 @@ def get_astrocartography_result(result_id: str):
     Retrieves a previously calculated astro-cartography result by its ID.
     """
     # Basic security check for path traversal
-    if not result_id.isalnum() or ".." in result_id or "/" in result_id:
+    if not result_id.replace('-', '').isalnum() or ".." in result_id or "/" in result_id:
         raise HTTPException(status_code=400, detail="Invalid result ID format.")
 
     result_file = RESULTS_DIR / f"{result_id}.json"

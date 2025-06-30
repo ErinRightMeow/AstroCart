@@ -29,7 +29,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/farmok/Development/-03-bld-wknd/SwissEph-Prototype/venv"
+set -gx VIRTUAL_ENV "/Users/farmok/Development/-03-bld-wknd/AstroCart/swisseph-api/venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

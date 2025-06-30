@@ -8,8 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-bin/
-lib/
 node_modules/
 build/
 develop-eggs/
@@ -17,7 +15,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -34,7 +31,6 @@ MANIFEST
 .env
 .env*
 .venv
-env/
 venv/
 
 # IDE settings
@@ -42,7 +38,10 @@ venv/
 .vscode/
 
 # Swiss Ephemeris data files
+# These are large data files downloaded by the ephemeris library.
 /swisseph-api/app/ephe/
 
 # Generated data from the API
-/swisseph-api/data/
+# Ignore all generated data, but keep the initial mock file for development.
+/swisseph-api/data/*
+!/swisseph-api/data/mockResults.json
