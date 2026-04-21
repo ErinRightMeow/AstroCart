@@ -1,25 +1,47 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-node_modules
-dist
-dist-ssr
-*.local
+# C extensions
+*.so
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Distribution / packaging
+.Python
+node_modules/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environments
 .env
+.env*
+.venv
+venv/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Swiss Ephemeris data files
+# These are large data files downloaded by the ephemeris library.
+/swisseph-api/app/ephe/
+
+# Generated data from the API
+# Ignore all generated data, but keep the initial mock file for development.
+/swisseph-api/data/*
+!/swisseph-api/data/mockResults.json

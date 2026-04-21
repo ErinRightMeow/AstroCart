@@ -14,25 +14,19 @@ type AppStep = 'landing' | 'userInfo' | 'avatar' | 'map' | 'influence' | 'result
 function App() {
   const [currentStep, setCurrentStep] = useState<AppStep>('landing');
   const [userData, setUserData] = useState<UserData>({
-    birthDate: '',
-    birthTime: '',
-    birthLocation: '',
-    currentLocation: '',
+    resultId: '',
     avatar: '',
-    influence: null
+    influence: null,
+    selectedPlanet: null
   });
 
   const handleGetStarted = () => {
     setCurrentStep('userInfo');
   };
 
-  const handleUserInfoNext = (data: {
-    birthDate: string;
-    birthTime: string;
-    birthLocation: string;
-    currentLocation: string;
-  }) => {
-    setUserData(prev => ({ ...prev, ...data }));
+  const handleUserInfoNext = (resultId: string) => {
+    // The resultId from the API is now stored in our state
+    setUserData(prev => ({ ...prev, resultId }));
     setCurrentStep('avatar');
   };
 
@@ -46,7 +40,13 @@ function App() {
   };
 
   const handleInfluenceNext = (influence: 'love' | 'career' | 'wealth') => {
-    setUserData(prev => ({ ...prev, influence }));
+    const planetMap = {
+      love: 'Venus',
+      career: 'Mars',
+      wealth: 'Jupiter'
+    };
+    const selectedPlanet = planetMap[influence];
+    setUserData(prev => ({ ...prev, influence, selectedPlanet }));
     setCurrentStep('results');
   };
 
@@ -75,12 +75,10 @@ function App() {
 
   const handleStartOver = () => {
     setUserData({
-      birthDate: '',
-      birthTime: '',
-      birthLocation: '',
-      currentLocation: '',
+      resultId: '',
       avatar: '',
-      influence: null
+      influence: null,
+      selectedPlanet: null
     });
     setCurrentStep('landing');
   };

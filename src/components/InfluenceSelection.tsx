@@ -13,6 +13,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
   const influences = [
     {
       type: 'love' as const,
+      planet: 'Venus',
       title: 'Love & Relationships',
       description: 'Find cities where your romantic energy flourishes and meaningful connections await',
       icon: Heart,
@@ -21,6 +22,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
     },
     {
       type: 'career' as const,
+      planet: 'Mars',
       title: 'Career & Growth',
       description: 'Discover locations that align with your professional aspirations and career advancement',
       icon: Briefcase,
@@ -29,6 +31,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
     },
     {
       type: 'wealth' as const,
+      planet: 'Jupiter',
       title: 'Wealth & Prosperity',
       description: 'Uncover places where financial opportunities and abundance naturally flow to you',
       icon: DollarSign,
@@ -46,7 +49,7 @@ export const InfluenceSelection: React.FC<InfluenceSelectionProps> = ({ onNext, 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4 flex items-center justify-center">
       <div className="w-full max-w-4xl">
-        <ProgressIndicator currentStep={4} totalSteps={5} />
+        <ProgressIndicator currentStep={3} totalSteps={3} />
         
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100">
           <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
