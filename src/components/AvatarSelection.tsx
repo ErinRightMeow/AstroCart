@@ -26,13 +26,13 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-4 flex items-center justify-center">
       <div className="w-full max-w-4xl">
         <ProgressIndicator currentStep={2} totalSteps={3} />
         
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-3xl font-bold text-center text-white mb-2">
-            Choose Your Avatar
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100">
+          <h2 className="text-3xl font-bold text-center text-slate-800 mb-2">
+            Choose Your Divine Guide
           </h2>
           <p className="text-indigo-200 text-center mb-8">
             Select an image that represents you on this cosmic journey.
@@ -58,7 +58,7 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
           <div className="flex gap-4">
             <button
               onClick={onBack}
-              className="flex-1 px-6 py-3 bg-white/20 text-white font-medium rounded-xl hover:bg-white/30 transition-all duration-200"
+              className="flex-1 px-6 py-3 bg-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-300 transition-all duration-200"
             >
               Back
             </button>
@@ -67,8 +67,8 @@ export const AvatarSelection: React.FC<AvatarSelectionProps> = ({ onNext, onBack
               disabled={!selectedAvatar}
               className={`flex-1 px-6 py-3 font-medium rounded-xl transition-all duration-200 ${
                 selectedAvatar
-                  ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:shadow-lg hover:shadow-indigo-500/25 transform hover:scale-105'
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  ? 'bg-gradient-to-r from-purple-400 to-blue-400 text-white hover:shadow-lg hover:shadow-purple-200 transform hover:scale-105'
+                  : 'bg-slate-300 text-slate-500 cursor-not-allowed'
               }`}
             >
               Continue

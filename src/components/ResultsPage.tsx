@@ -118,8 +118,8 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
             <h2 className="text-4xl font-bold text-white mb-4">
               Your Cosmic Insights
             </h2>
-            <p className="text-indigo-200 text-lg">
-              Based on your birth chart, here are the perfect cities for your {userData.influence} journey
+            <p className="text-slate-600 text-lg">
+              Based on your birth chart, here are the perfect cities for your <span className="font-bold">{userData.influence} journey</span>
             </p>
           </div>
 
@@ -129,6 +129,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
               <MapPin className="w-6 h-6 mr-2 text-yellow-400" />
               Top 3 Recommended Cities
             </h3>
+
             <div className="grid md:grid-cols-3 gap-6">
               {cities.map((city, index) => (
                 <div key={city.city} className="bg-white/20 rounded-xl p-6 hover:bg-white/30 transition-all duration-300">
@@ -188,8 +189,24 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({ userData, onBack, onSt
               Change Focus
             </button>
             <button
+              onClick={onBack}
+              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-400 to-blue-400 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-purple-200 transform hover:scale-105 transition-all duration-200"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back
+            </button>
+            {user && (
+              <button
+                onClick={saveReading}
+                className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-300 to-purple-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-indigo-200 transform hover:scale-105 transition-all duration-200"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                Save Reading
+              </button>
+            )}
+            <button
               onClick={handleShare}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-500/25 transform hover:scale-105 transition-all duration-200"
+              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-300 to-emerald-300 text-white font-medium rounded-xl hover:shadow-lg hover:shadow-green-200 transform hover:scale-105 transition-all duration-200"
             >
               <Share2 className="w-5 h-5 mr-2" />
               Share My Results
